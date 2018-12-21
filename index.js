@@ -26,9 +26,9 @@ var server = http.createServer(function(req, res){
 	res.end('Hello World\n');
 
 	// Log the request path
-	console.log('req received on path: '+trimmedpath
-		+' w/ method: '+method
-		+' w/ query params: '+JSON.stringify(queryObjStr));
+	console.log('Request received on path ('+trimmedpath
+		+') w/ method ('+method
+		+') w/ query params: '+JSON.stringify(queryObjStr));
 });
 
 // Start the server and have it listen on port 3000
