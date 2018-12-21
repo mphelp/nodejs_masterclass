@@ -11,13 +11,13 @@ var url = require('url');
 var server = http.createServer(function(req, res){
 
 	// Get url and parse
-	var parsedUrl = url.parse(req.url, true); // true ensures correct parsing of query below
+	var parsedUrl = url.parse(req.url, true); // true ensures query str is obj not str
 
 	// Get path
 	var trimmedpath = parsedUrl.pathname.replace(/^\/+|\/+$/g,'');
 
 	// Get the query string as an object
-	var queryObj = parsedUrl.query;
+	var queryObjStr = parsedUrl.query;
 
 	// Get the HTTP method
 	var method = req.method.toLowerCase();
@@ -28,7 +28,7 @@ var server = http.createServer(function(req, res){
 	// Log the request path
 	console.log('req received on path: '+trimmedpath
 		+' w/ method: '+method
-		+' w/ query params: '+queryObj);
+		+' w/ query params: '+JSON.stringify(queryObjStr));
 });
 
 // Start the server and have it listen on port 3000
