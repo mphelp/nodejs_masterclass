@@ -18,7 +18,7 @@ var server = http.createServer(function(req, res){
 	var trimmedpath = parsedUrl.pathname.replace(/^\/+|\/+$/g,'');
 
 	// Get the query string as an object
-	var queryObjStr = parsedUrl.query;
+	var queryStrObj = parsedUrl.query;
 
 	// Get the HTTP method
 	var method = req.method.toLowerCase();
@@ -29,13 +29,23 @@ var server = http.createServer(function(req, res){
 	// Get the payload, if any
 	var decoder = new StringDecoder('utf-8');
 	var buffer = '';
-	// request emits a data event we're binding on
-	req.on('data',function(data){
+	req.on('data',function(data){ // request emits a data event we're binding on
 		buffer += decoder.write(data);
 	})
 	req.on('end',function(){
 		buffer += decoder.end();
 
+		// Choose handler for this req, default: notfound
+		var chosenHandler = typeof(router[trimmedpath]) !== 'undefined' ? router[trimmedpath] : handlers.notFound;
+
+		// Construct data obj to send to handler
+		var data = {
+			trimmedpath,
+			queryStrObj,
+			method,
+			headers,
+			'payload' : buffer,
+		};
 		// send response
 		res.end('Hello world\n');
 
@@ -48,3 +58,25 @@ var server = http.createServer(function(req, res){
 server.listen(3000, function(){
 	console.log("The server is listening on port 3000");
 });
+
+
+
+
+
+
+// Defining handlers
+var handlers = {};
+
+// Sample handler
+handlers.sample = function(data, callback){
+	// Callback http status code, and a payload obj		
+	callback(406, {'name': 'sample handler'});
+};
+// Not found handler
+handlers.notFound = function(data, callback){
+	callback(404);
+};
+// Defining a req router
+var router = {
+	'sample' : handlers.sample
+};
