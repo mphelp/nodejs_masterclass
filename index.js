@@ -22,13 +22,13 @@ var server = http.createServer(function(req, res){
 	// Get the HTTP method
 	var method = req.method.toLowerCase();
 
+	// Get req headers as obj
+	var { headers } = req;
 	// Send response
 	res.end('Hello World\n');
 
 	// Log the request path
-	console.log('Request received on path ('+trimmedpath
-		+') w/ method ('+method
-		+') w/ query params: '+JSON.stringify(queryObjStr));
+	console.log('Request headers:',headers);
 });
 
 // Start the server and have it listen on port 3000
