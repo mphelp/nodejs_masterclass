@@ -46,6 +46,12 @@ var server = http.createServer(function(req, res){
 			headers,
 			'payload' : buffer,
 		};
+		// Route the request to handler specified in router
+		chosenHandler(data, function(statusCode,payload){
+			// Use the status code called back by handler or default to 200
+			statusCode = typeof(statusCode) === 'number' ? statusCode : 200;
+			// Use the payload called by the handler, or default to ...
+		});
 		// send response
 		res.end('Hello world\n');
 
