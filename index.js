@@ -50,7 +50,8 @@ var server = http.createServer(function(req, res){
 		chosenHandler(data, function(statusCode,payload){
 			// Use the status code called back by handler or default to 200
 			statusCode = typeof(statusCode) === 'number' ? statusCode : 200;
-			// Use the payload called by the handler, or default to ...
+			// Use the payload called by the handler, or default to empty
+			payload = typeof(payload) === 'object' ? payload : {};
 		});
 		// send response
 		res.end('Hello world\n');
