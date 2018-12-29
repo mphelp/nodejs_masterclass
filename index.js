@@ -47,17 +47,23 @@ var server = http.createServer(function(req, res){
 			'payload' : buffer,
 		};
 		// Route the request to handler specified in router
+		// format: chosenHandler(data, CALLBACK(resp code, resp payload)
 		chosenHandler(data, function(statusCode,payload){
 			// Use the status code called back by handler or default to 200
 			statusCode = typeof(statusCode) === 'number' ? statusCode : 200;
 			// Use the payload called by the handler, or default to empty
 			payload = typeof(payload) === 'object' ? payload : {};
-		});
-		// send response
-		res.end('Hello world\n');
+			// Convert response payload to string
+			var payloadStr = JSON.stringify(payload);
 
-		// Log the payload
-		console.log('Request received w/ payload:',buffer);
+			// Return response
+			res.writeHead(statusCode);
+			res.end(payloadStr);
+
+			// Log the payload
+			console.log('Returning this response: ',statusCode,payloadStr);
+		});
+
 	})
 });
 
@@ -65,10 +71,6 @@ var server = http.createServer(function(req, res){
 server.listen(3000, function(){
 	console.log("The server is listening on port 3000");
 });
-
-
-
-
 
 
 // Defining handlers
