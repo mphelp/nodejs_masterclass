@@ -5,13 +5,37 @@
 
 // Dependencies
 var http = require('http');
+var https = require('https');
 var url = require('url');
 var { StringDecoder } = require('string_decoder');
 var config = require('./config');
+var fs = require('fs');
 
-// The server should respond to all requests w/ a string
-var server = http.createServer(function(req, res){
+// Instantiate HTTP(S) servers
+var httpsServerOptions = {
+	'key' : fs.readFileSync('./https/key.pem'),
+	'cert' : fs.readFileSync('./https/cert.pem'),
+};
+var httpServer = http.createServer(function(req, res){
+	unifiedServer(req,res);
+});
+var httpsServer = https.createServer(httpsServerOptions,function(req,res){
+	unifiedServer(req,res);
+});
 
+
+
+// Start HTTP(S) servers
+httpServer.listen(config.httpPort, function(){
+	console.log(`The server is listening on port ${config.httpPort} in ${config.envName} mode`);
+});
+httpsServer.listen(config.httpsPort, function(){
+	console.log(`The server is listening on port ${config.httpsPort} in ${config.envName} mode`);
+});
+
+
+// Https and http server logic
+var unifiedServer = function(req,res){
 	// Get url and parse
 	var parsedUrl = url.parse(req.url, true); // true ensures query str is obj not str
 
@@ -37,7 +61,9 @@ var server = http.createServer(function(req, res){
 		buffer += decoder.end();
 
 		// Choose handler for this req, default: notfound
-		var chosenHandler = typeof(router[trimmedpath]) !== 'undefined' ? router[trimmedpath] : handlers.notFound;
+		var chosenHandler = typeof(router[trimmedpath]) !== 'undefined' 
+			? router[trimmedpath] 
+			: handlers.notFound;
 
 		// Construct data obj to send to handler
 		var data = {
@@ -65,15 +91,8 @@ var server = http.createServer(function(req, res){
 			// Log the payload
 			console.log('Returning this response: ',statusCode,payloadStr);
 		});
-
 	})
-});
-
-// Start the server
-server.listen(config.port, function(){
-	console.log(`The server is listening on port ${config.port} in ${config.envName} mode`);
-});
-
+};
 
 // Defining handlers
 var handlers = {};
