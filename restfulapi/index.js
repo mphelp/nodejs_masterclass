@@ -25,21 +25,11 @@ var httpsServer = https.createServer(httpsServerOptions,function(req,res){
 
 
 
-// Start HTTP(S) servers
-httpServer.listen(config.httpPort, function(){
-	console.log(`The server is listening on port ${config.httpPort} in ${config.envName} mode`);
-});
-httpsServer.listen(config.httpsPort, function(){
-	console.log(`The server is listening on port ${config.httpsPort} in ${config.envName} mode`);
-});
-
 
 // Https and http server logic
 var unifiedServer = function(req,res){
-	// Get url and parse
-	var parsedUrl = url.parse(req.url, true); // true ensures query str is obj not str
 
-	// Get path
+	var parsedUrl = url.parse(req.url, true); // true ensures query str is obj not str
 	var endpoint = parsedUrl.pathname.replace(/^\/+|\/+$/g,'');
 
 	// Get the query string as an object
@@ -109,3 +99,13 @@ handlers.notFound = function(data, callback){
 var router = {
 	'ping' : handlers.ping
 };
+
+
+// Start HTTP(S) servers
+httpServer.listen(config.httpPort, function(){
+	console.log(`The http server is listening on port ${config.httpPort} in ${config.envName} mode`);
+});
+httpsServer.listen(config.httpsPort, function(){
+	console.log(`The https server is listening on port ${config.httpsPort} in ${config.envName} mode`);
+});
+
