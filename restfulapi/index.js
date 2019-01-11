@@ -4,12 +4,14 @@
  */
 
 // Dependencies
-var http = require('http');
-var https = require('https');
-var url = require('url');
-var { StringDecoder } = require('string_decoder');
-var config = require('./config');
-var fs = require('fs');
+const http = require('http');
+const https = require('https');
+const url = require('url');
+const { StringDecoder } = require('string_decoder');
+const config = require('./config');
+const fs = require('fs');
+
+const api = require('./api')
 
 // Instantiate HTTP(S) servers
 var httpsServerOptions = {
@@ -33,8 +35,6 @@ var unifiedServer = function(req,res){
 	var endpoint = parsedUrl.pathname.replace(/^\/+|\/+$/g,'');
 	var queryStrObj = parsedUrl.query;
 	var method = req.method.toLowerCase();
-
-	// Get req headers as obj
 	var { headers } = req;
 
 	// Get the payload, if any
