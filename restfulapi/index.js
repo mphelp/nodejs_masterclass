@@ -31,11 +31,7 @@ var unifiedServer = function(req,res){
 
 	var parsedUrl = url.parse(req.url, true); // true ensures query str is obj not str
 	var endpoint = parsedUrl.pathname.replace(/^\/+|\/+$/g,'');
-
-	// Get the query string as an object
 	var queryStrObj = parsedUrl.query;
-
-	// Get the HTTP method
 	var method = req.method.toLowerCase();
 
 	// Get req headers as obj
